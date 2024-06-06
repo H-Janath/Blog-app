@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { emit } from "process";
+
 
 const userSchema = new mongoose.Schema({
     username:{
