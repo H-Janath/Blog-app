@@ -24,7 +24,7 @@ export const signup = async (req, res, next) => {
 
     try {
         await newUser.save();
-        res.json({ message: 'Sign up succesful' });
+        res.json({ message: 'Sign up succesful'});
     } catch (err) {
         next(err);
     }
@@ -33,9 +33,9 @@ export const signup = async (req, res, next) => {
 
 export const signin = async (req, res, next) => {
     const { email, password } = req.body;
-
+  
     if (!email || !password || email === '' || password === '') {
-        next(errorHandler(400, 'All field are required'))
+        next(errorHandler(400, 'All field are required'));
     }
 
     
