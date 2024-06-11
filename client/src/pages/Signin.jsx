@@ -2,7 +2,8 @@ import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch,useSelector } from 'react-redux';
-import { signInStart,signInFailure,signInSuccess } from '../redux/User/UserSlice';
+import { signInStart,signInFailure,singInSuccess } from '../redux/User/UserSlice';
+import OAuth from '../componenet/OAuth';
 export default function SignIn() {
   const [formData, setFormData] = useState({});
   const {loading,error:errorMessage} = useSelector(state=>state.user);
@@ -17,7 +18,6 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
-      console.log("janath")
       return dispatch(signInFailure("Please fil all the fields"));
     }
     try {
@@ -32,7 +32,7 @@ export default function SignIn() {
         dispatch(signInFailure(data.message))
       }
       if(res.ok){
-        dispatch(signInSuccess(data))
+        dispatch(singInSuccess(data))
         navigate('/') 
       }
     } catch (err) {
@@ -83,6 +83,7 @@ export default function SignIn() {
                   ) : 'Sign In'
                 }
               </Button>
+              <OAuth/>
             </form>
             <div className='flex gap-2 text-sm  mt-5'>
               <span>Don't have an account</span>
