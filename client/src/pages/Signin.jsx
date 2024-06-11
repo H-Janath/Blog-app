@@ -5,7 +5,7 @@ import { useDispatch,useSelector } from 'react-redux';
 import { signInStart,signInFailure,signInSuccess } from '../redux/User/UserSlice';
 export default function SignIn() {
   const [formData, setFormData] = useState({});
-  const {loading,err:errorMessage} = useSelector(state=>state.user);
+  const {loading,error:errorMessage} = useSelector(state=>state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
