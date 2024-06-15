@@ -1,7 +1,7 @@
 import { Button } from 'flowbite-react'
 import { AiFillGoogleCircle } from 'react-icons/ai';
 import { GoogleAuthProvider,getAuth,signInWithPopup} from 'firebase/auth'
-import { app } from '../pages/firebase';
+import { app } from '../firebase';
 import {useDispatch} from 'react-redux';
 import {singInSuccess} from '../redux/User/UserSlice';
 import {useNavigate} from 'react-router-dom'
