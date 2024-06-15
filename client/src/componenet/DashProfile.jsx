@@ -14,7 +14,8 @@ export default function DashProfile() {
   const filePickerRef = useRef();
   const [imageFileUploadError,setImageFileUploadError] = useState(null);
   const [imageFileUploadProgress,setImageFileUploadProgress] = useState(null);
-  const handleImageChane = (e) =>{
+
+  const handleImageChange = (e) =>{
     const file = e.target.files[0];
     if(file){
       setImageFile(file);
@@ -24,7 +25,6 @@ export default function DashProfile() {
 
   useEffect(()=>{
     if(imageFile){
-      
       uploadImage();
     }
   },[imageFile])
@@ -66,11 +66,13 @@ setImageFileUploadError(null);
     }
   );
   };
+
   return (
+
     <div className='max-w-lg mx-auto p-3 w-full'>
       <h1 className='my-7 text-center font-semibold text-3xl'>Profle</h1>
       <form className='flex flex-col gap-4'>
-        <input type='file' accept='image/*'onChange={handleImageChane} ref={filePickerRef} hidden/>
+        <input type='file' accept='image/*'onChange={handleImageChange} ref={filePickerRef} hidden/>
         <div className='relative w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full' 
           onClick={()=>filePickerRef.current.click()}>
           {imageFileUploadProgress && (
