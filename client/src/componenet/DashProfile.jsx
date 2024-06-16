@@ -1,10 +1,11 @@
 import { Alert, Button, TextInput } from 'flowbite-react';
 import React, { useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage'
 import { app } from '../firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { updateFailure,updateSuccess,updateStart } from '../redux/User/UserSlice';
 
 export default function DashProfile() {
 
@@ -14,6 +15,39 @@ export default function DashProfile() {
   const filePickerRef = useRef();
   const [imageFileUploadError,setImageFileUploadError] = useState(null);
   const [imageFileUploadProgress,setImageFileUploadProgress] = useState(null);
+  const  [formData,setFormData] = useState({});
+  const dispatch = useDispatch();
+
+  const handleChange =(e)=>{
+    setFormData({...formData,[e.target.id]: e.target.value})
+  }
+
+  const handleSubmit= async (e)=>{
+    e.preventDefault();
+    if(Object.keys(formData).length === 0){
+      return;
+    }
+    try{
+        dispatch(updateStart());
+        const res = await fetch(`/api/user/update/${currentUser._id}`,{
+          method: 'PUT',
+          headers:{
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData),
+        });
+        const data = await res.json();
+        if(!res.ok){
+          dispatch(updateFailure(data.message));
+
+        }else{
+          dispatch(updateSuccess(data));
+        }
+    }catch(error){
+        dispatch(updateFailure(error.message));
+    }
+  }
+
 
   const handleImageChange = (e) =>{
     const file = e.target.files[0];
@@ -60,8 +94,9 @@ setImageFileUploadError(null);
       setImageFileUrl(null);
     },
     ()=>{
-      getDownloadURL(uploadTask.snapshot.ref).then((donloadURL)=>{
-        setImageFileUrl(donloadURL);
+      getDownloadURL(uploadTask.snapshot.ref).then((downloadURL)=>{
+        setImageFileUrl(downloadURL);
+        setFormData({...formData,profilePicture:downloadURL})
       });
     }
   );
@@ -71,7 +106,7 @@ setImageFileUploadError(null);
 
     <div className='max-w-lg mx-auto p-3 w-full'>
       <h1 className='my-7 text-center font-semibold text-3xl'>Profle</h1>
-      <form className='flex flex-col gap-4'>
+      <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
         <input type='file' accept='image/*'onChange={handleImageChange} ref={filePickerRef} hidden/>
         <div className='relative w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full' 
           onClick={()=>filePickerRef.current.click()}>
@@ -104,9 +139,9 @@ setImageFileUploadError(null);
         {imageFileUploadError && <Alert color='failure'>{imageFileUploadError}</Alert>}
           
         
-        <TextInput type='text' id='usrname' placeholder='username' defaultValue={currentUser.username} />
-        <TextInput type='email' id='email' placeholder='example@gmail.com' defaultValue={currentUser.email} />
-        <TextInput type='password' id='password' placeholder='password'/>
+        <TextInput type='text' id='usrname' placeholder='username' defaultValue={currentUser.username} onChange={handleChange}/>
+        <TextInput type='email' id='email' placeholder='example@gmail.com' defaultValue={currentUser.email} onChange={handleChange}/>
+        <TextInput type='password' id='password' placeholder='password' onChange={handleChange}/>
         <Button type='submit' gradientDuoTone='purpleToBlue' outline>
           Update
         </Button>
