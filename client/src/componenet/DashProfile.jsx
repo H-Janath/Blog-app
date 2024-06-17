@@ -8,7 +8,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import { updateFailure,updateSuccess,updateStart } from '../redux/User/UserSlice';
 
 export default function DashProfile() {
-
+  const [imageFileuploading,setImageFileuploading] = useState(false);
   const { currentUser } = useSelector(state => state.user)
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
@@ -16,7 +16,10 @@ export default function DashProfile() {
   const [imageFileUploadError,setImageFileUploadError] = useState(null);
   const [imageFileUploadProgress,setImageFileUploadProgress] = useState(null);
   const  [formData,setFormData] = useState({});
+  const [showModel,setShowModel] = useState(false);
+  const [upadteUserSuccess,setUpadteUserSuccess] = useState(null); 
   const dispatch = useDispatch();
+  const [updateUsererror,setUpdateUsererror] = useState(null); 
 
   const handleChange =(e)=>{
     setFormData({...formData,[e.target.id]: e.target.value})
@@ -24,27 +27,39 @@ export default function DashProfile() {
 
   const handleSubmit= async (e)=>{
     e.preventDefault();
+    setUpdateUsererror(null);
+    setUpadteUserSuccess(null);
     if(Object.keys(formData).length === 0){
+      setUpdateUsererror('No changes made');
+      return;
+    }
+    if(imageFileuploading){
+      setUpdateUsererror("Please wait for image to upload");
       return;
     }
     try{
+      console.log("Janath");
         dispatch(updateStart());
+        console.log(formData);
         const res = await fetch(`/api/user/update/${currentUser._id}`,{
           method: 'PUT',
           headers:{
             'Content-Type': 'application/json'
           },
+          
           body: JSON.stringify(formData),
         });
         const data = await res.json();
         if(!res.ok){
           dispatch(updateFailure(data.message));
-
+          setUpdateUsererror(data.message);
         }else{
           dispatch(updateSuccess(data));
+          setUpadteUserSuccess("User's profile update successfully");
         }
     }catch(error){
         dispatch(updateFailure(error.message));
+        updateUsererror(error.message);
     }
   }
 
@@ -75,6 +90,7 @@ export default function DashProfile() {
 //     }
 //   }
 // }
+setImageFileuploading(true);
 setImageFileUploadError(null);
   const storage = getStorage(app);
   const fileName = new Date().getTime()+imageFile.name;
@@ -92,11 +108,13 @@ setImageFileUploadError(null);
       setImageFileUploadProgress(null);
       setImageFile(null);
       setImageFileUrl(null);
+      setImageFileuploading(false);
     },
     ()=>{
       getDownloadURL(uploadTask.snapshot.ref).then((downloadURL)=>{
         setImageFileUrl(downloadURL);
         setFormData({...formData,profilePicture:downloadURL})
+        setImageFileuploading(false);
       });
     }
   );
@@ -139,7 +157,7 @@ setImageFileUploadError(null);
         {imageFileUploadError && <Alert color='failure'>{imageFileUploadError}</Alert>}
           
         
-        <TextInput type='text' id='usrname' placeholder='username' defaultValue={currentUser.username} onChange={handleChange}/>
+        <TextInput type='text' id='username' placeholder='username' defaultValue={currentUser.username} onChange={handleChange}/>
         <TextInput type='email' id='email' placeholder='example@gmail.com' defaultValue={currentUser.email} onChange={handleChange}/>
         <TextInput type='password' id='password' placeholder='password' onChange={handleChange}/>
         <Button type='submit' gradientDuoTone='purpleToBlue' outline>
@@ -151,6 +169,15 @@ setImageFileUploadError(null);
         <span className='cursor-pointer'>Delete account</span>
         <span className='cursor-pointer'>Sign Out</span>
       </div>
+      {upadteUserSuccess &&(
+      <Alert color='success' className='mt-5'>
+        {upadteUserSuccess}
+        </Alert>)}
+        {updateUsererror &&(
+      <Alert color='failure' className='mt-5'>
+        {updateUsererror}
+        </Alert>)}
+
 
     </div>
   )
