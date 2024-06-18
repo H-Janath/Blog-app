@@ -1,16 +1,30 @@
-import { Avatar, Button, Dropdown, Navbar, TextInput } from "flowbite-react"
+import { Avatar, Button, Dropdown, DropdownHeader, Navbar, TextInput } from "flowbite-react"
 import { Link, useLocation } from "react-router-dom"
 import { AiOutlineSearch } from 'react-icons/ai'
 import { FaMoon,FaSun } from 'react-icons/fa';
 import { useSelector,useDispatch } from "react-redux";
 import { toggleTheme } from "../redux/theam/theameSlice";
-
+import {signoutSuccess} from  '../redux/User/UserSlice';
 export default function Header() {
     const path = useLocation().pathname;
     const dispatch = useDispatch();
     const {currentUser} = useSelector(state => state.user);
     const {theme} = useSelector((state)=> state.theme);
-
+    const handleSignout = async()=>{
+        try{
+          const res = await fetch('/api/user/signout',{
+            method:'POST'
+          });
+          const data = await res.json();
+          if(!res.ok){
+            console.log(data.message);
+          }else{
+            dispatch(signoutSuccess());
+          }
+        }catch(error){
+    
+        }
+      }
     return (
         <Navbar className="border-b-2">
             <Link to='/' className="self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white">
@@ -43,6 +57,19 @@ export default function Header() {
                             />
                         }
                     >
+                        <Dropdown.Header>
+                            <span className="block text-sm">@{currentUser.username}</span>
+                            <span className="block text-sm font-medium truncate">
+                                {currentUser.email}
+                            </span>
+                        </Dropdown.Header>
+                        <Link to={'/dashboard?tab=profile'}>
+                            <Dropdown.Item>
+                                Profile
+                            </Dropdown.Item>
+                        </Link>
+                        <Dropdown.Divider/>
+                        <Dropdown.Item onClick={handleSignout}>Sign out</Dropdown.Item>
 
                     </Dropdown>
                 ):(
