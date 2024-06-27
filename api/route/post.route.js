@@ -1,7 +1,10 @@
-import express from 'express';
-import { verifyToken } from '../utils/verifyUser';
-import { createPost } from '../controller/post.controller';
+import express from 'express'
+import { create } from '../controller/post.controller.js';
+import { verifyToken } from '../utils/verifyUser.js';
+
 
 const route = express.Router();
 
-route.post('/create',verifyToken,createPost);
+route.post("/create",verifyToken,create);
+
+export default route;

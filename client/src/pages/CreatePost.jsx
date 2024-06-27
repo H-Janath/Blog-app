@@ -1,6 +1,10 @@
 import React from 'react'
 import {TextInput,FileInput, Button} from 'flowbite-react';
 
+import JoditEditor from 'jodit-react';
+
+
+
 export default function CreatePost() {
   return (
     <div className='p-3 max-w-3xl mx-auto min-h-screen'>
@@ -19,10 +23,9 @@ export default function CreatePost() {
           <FileInput typeof='file' accept='image/*'/>
           <Button type='button' gradientDuoTone='purpleToBlue' size='sm' outline>Upload image</Button>
         </div>
-
+        <JoditEditor/>
+        <Button type='submit' gradientDuoTone='purpleToPink'>Publish</Button>
       </form>
-     
-      
     </div>
   )
 }

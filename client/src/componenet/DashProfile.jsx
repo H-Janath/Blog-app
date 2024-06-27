@@ -12,9 +12,7 @@ import {
   deleteUserFailure,
   deleteUserStart,
   delteUserSuccess,
-  signoutSuccess,
-  singInSuccess
-} from '../redux/User/UserSlice';
+  signoutSuccess} from '../redux/User/UserSlice';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 
