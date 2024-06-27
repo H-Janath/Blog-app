@@ -5,8 +5,9 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/
 import { app } from '../firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { updateFailure, 
-  updateSuccess, 
+import {
+  updateFailure,
+  updateSuccess,
   updateStart,
   deleteUserFailure,
   deleteUserStart,
@@ -14,11 +15,12 @@ import { updateFailure,
   signoutSuccess,
   singInSuccess
 } from '../redux/User/UserSlice';
-import { HiOutlineExclamationCircle } from 'react-icons/hi'
+import { HiOutlineExclamationCircle } from 'react-icons/hi';
+import { Link } from 'react-router-dom';
 
 export default function DashProfile() {
   const [imageFileuploading, setImageFileuploading] = useState(false);
-  const { currentUser,error } = useSelector(state => state.user)
+  const { currentUser, error,loading } = useSelector(state => state.user)
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const filePickerRef = useRef();
@@ -31,37 +33,37 @@ export default function DashProfile() {
   const [updateUsererror, setUpdateUsererror] = useState(null);
 
 
-  const handleSignout = async()=>{
-    try{
-      const res = await fetch('/api/user/signout',{
-        method:'POST'
+  const handleSignout = async () => {
+    try {
+      const res = await fetch('/api/user/signout', {
+        method: 'POST'
       });
       const data = await res.json();
-      if(!res.ok){
+      if (!res.ok) {
         console.log(data.message);
-      }else{
+      } else {
         dispatch(signoutSuccess());
       }
-    }catch(error){
+    } catch (error) {
 
     }
   }
 
-  const handleDeeteUser= async()=>{
+  const handleDeeteUser = async () => {
     setShowModel(false);
-    try{
+    try {
       dispatch(deleteUserStart());
       const res = await fetch(`/api/user/delete/${currentUser._id}`, {
-          method: 'DELETE'
-        });
-        const data = await res.json();
-        if(!res.ok){
-          dispatch(deleteUserFailure(data.message));
-        }else{
-          dispatch(delteUserSuccess (data));
-        }
-    }catch(error){
-        dispatch(deleteUserFailure(error.message));
+        method: 'DELETE'
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        dispatch(deleteUserFailure(data.message));
+      } else {
+        dispatch(delteUserSuccess(data));
+      }
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
     }
   }
 
@@ -204,9 +206,22 @@ export default function DashProfile() {
         <TextInput type='text' id='username' placeholder='username' defaultValue={currentUser.username} onChange={handleChange} />
         <TextInput type='email' id='email' placeholder='example@gmail.com' defaultValue={currentUser.email} onChange={handleChange} />
         <TextInput type='password' id='password' placeholder='password' onChange={handleChange} />
-        <Button type='submit' gradientDuoTone='purpleToBlue' outline>
-          Update
+        <Button type='submit' gradientDuoTone='purpleToBlue' outline disabled={loading||imageFileuploading}>
+          {loading? 'Loading':'Update'}
         </Button>
+        {
+          currentUser.isAdmin && (
+            <Link to={'/create-post'}>
+              <Button
+                type='button'
+                gradientDuoTone='purpleToPink'
+                className='w-full'
+              >
+                Create a post
+              </Button>
+            </Link>
+          )
+        }
 
       </form>
       <div className='text-red-500 flex justify-between mt-5'>
@@ -221,7 +236,7 @@ export default function DashProfile() {
         <Alert color='failure' className='mt-5'>
           {updateUsererror}
         </Alert>)}
-        {error && (
+      {error && (
         <Alert color='failure' className='mt-5'>
           {error}
         </Alert>)}
@@ -234,7 +249,7 @@ export default function DashProfile() {
             <h3 className='mb-5 text-lg text-gray-500 dark:text-gray-400'>Are you wnat to delete your account?</h3>
             <div className="flex justify-center gap-4">
               <Button color='failure' onClick={handleDeeteUser}>Yes, I'm sure</Button>
-              <Button color='gray'  onClick={()=>setShowModel(false)}>No, cancel</Button>
+              <Button color='gray' onClick={() => setShowModel(false)}>No, cancel</Button>
             </div>
           </div>
         </Modal.Body>
