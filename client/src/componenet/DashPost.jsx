@@ -3,11 +3,26 @@ import { useSelector } from 'react-redux';
 import { Table } from 'flowbite-react';
 import { Link } from 'react-router-dom'
 export default function DashPost() {
-
-
   const { currentUser } = useSelector((state) => state.user);
   const [userPost, setUserPost] = useState([]);
+  const [showMore,setShowMore] = useState(true);
 
+  const handleShowMore = async ()=>{
+    const startindex = userPost.length;
+    try{
+      const res = await fetch(`/api/post/getposts?userId=${currentUser._id}&startIndex=$
+        ${startindex}`);
+        const data  = await res.json();
+        if(res.ok){
+          setUserPost((prev)=>[...prev,...data.posts]);
+          if(data.posts.length<9){
+            setShowMore(false)
+          }
+        }
+    }catch(error){
+
+    }
+  }
   useEffect(() => {
     const fetchPost = async () => {
       try {
@@ -15,6 +30,9 @@ export default function DashPost() {
         const data = await res.json();
         if (res.ok) {
           setUserPost(data.posts);
+          if(data.posts.length<9){
+            setShowMore(false);
+          }
 
         }
       } catch (error) {
@@ -84,6 +102,13 @@ export default function DashPost() {
               </Table.Body>
             ))}
           </Table>
+          {
+            showMore && (
+              <button onClick={handleShowMore} className='w-full text-teal-300 self-center text-sm py-7'>
+                Show more
+              </button>
+            )
+          }
         </>
       ) : (
         <p>You have no post yet</p>
