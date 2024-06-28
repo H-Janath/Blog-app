@@ -22,7 +22,6 @@ const postSchema = new mongoose.Schema({
     category:{
         type: String,
         require: true,
-        unique: true,
     },
     slug:{
         type: String,

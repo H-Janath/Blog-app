@@ -7,15 +7,16 @@ import {getDownloadURL, getStorage,ref, uploadBytesResumable} from 'firebase/sto
 import {app} from '../firebase';
 import {CircularProgressbar} from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist'
-
+import {Navigate, useNavigate} from 'react-router-dom'
 export default function CreatePost() {
 
+  const navigat = useNavigate();
   const [file,setFile] = useState(null);
   const [formdata,setFormData] = useState({});
   const [imageUploadProgress,setImageUploadProgress] = useState(null);
   const [imageUploadError,setImageUploadError] = useState(null);
-
-
+  const [publishError, setPublishError] = useState(null);
+ 
   const handleUploadImage = async () =>{
       try{
           if(!file){
@@ -52,14 +53,50 @@ export default function CreatePost() {
         console.log(error);
       }
   }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try{
+      const res = await fetch('/api/post/create',{
+        method: 'POST',
+        headers:{
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formdata),
+      });
+      const data = await res.json();
+      if(!res.ok){
+        setPublishError(data.message);
+        return
+      }
+      if(data.success == false){
+        setPublishError(data.message);
+        return;
+      }
+      if(res.ok){
+        setPublishError(null);
+        navigat(`/post/${data.slug}`);
+      }
+    }catch(error){
+        setPublishError('Something went wrong');
+        
+    }
+  }
 
   return (
     <div className='p-3 max-w-3xl mx-auto min-h-screen'>
       <h1 className='text-center text-3xl my-7 font-semibold'>Create a post</h1>
-      <form className='flex flex-col gap-4'>
+      <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
         <div className="flex flex-col gap-4 sm:flex-row justify-between">
-          <TextInput type='text' placeholder='Title' required id='title' className='flex-1'/>
-          <select>
+          <TextInput type='text' placeholder='Title' required id='title' className='flex-1'
+          onChange={(e)=>
+            setFormData({...formdata,title: e.target.value})
+          }
+          />
+          <select
+            onChange={(e)=>
+              setFormData({...formdata, category: e.target.value})
+            }
+          >
             <option value='uncategorized' >Select a category</option>
             <option value='javascript'>Java script</option>
             <option value='reactjs'>React.js</option>
@@ -103,8 +140,17 @@ export default function CreatePost() {
           className='w-full h-72 object-cover'
           />
         )}
-        <JoditEditor/>
+        <JoditEditor
+        onChange={(value)=>{
+          setFormData({...formdata, content: value});
+        }
+
+        }
+        />
         <Button type='submit' gradientDuoTone='purpleToPink' >Publish</Button>
+        {
+          publishError && <Alert color='failure' className='mt-5'>{publishError}</Alert>
+        }
       </form>
     </div>
   )
