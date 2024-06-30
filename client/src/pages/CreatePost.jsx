@@ -7,7 +7,7 @@ import {getDownloadURL, getStorage,ref, uploadBytesResumable} from 'firebase/sto
 import {app} from '../firebase';
 import {CircularProgressbar} from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist'
-import {Navigate, useNavigate} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 export default function CreatePost() {
 
   const navigat = useNavigate();

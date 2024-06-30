@@ -7,7 +7,8 @@ import {app} from '../firebase';
 import {CircularProgressbar} from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist'
 import {useNavigate,useParams} from 'react-router-dom';
-import {useSelector} from 'react-redux'
+import {useSelector} from 'react-redux';
+
 export default function UpdatePost()  {
 
   const navigat = useNavigate();

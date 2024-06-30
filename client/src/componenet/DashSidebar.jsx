@@ -1,5 +1,5 @@
 import { Sidebar } from 'flowbite-react'
-import { HiArrowSmRight, HiDocumentText, HiUser } from 'react-icons/hi'
+import { HiArrowSmRight, HiDocumentText, HiOutlineUserGroup, HiUser } from 'react-icons/hi'
 import { Link, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { signoutSuccess } from '../redux/User/UserSlice'
@@ -59,6 +59,17 @@ export default function DashSidebar() {
                 as='div'
               >
                 Posts
+              </Sidebar.Item>
+            </Link>)}
+            {currentUser.isAdmin && (
+            <Link to='/dashboard?tab=users' id='2'>
+              <Sidebar.Item
+                active={tab === 'users'}
+                icon={HiOutlineUserGroup}
+                
+                as='div'
+              >
+                Users
               </Sidebar.Item>
             </Link>)}
 

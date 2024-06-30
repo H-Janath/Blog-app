@@ -24,11 +24,10 @@ export default function App() {
       <Route path='/dashboard' element={<Dashboard/>}/>
       </Route>
       <Route element={<OnlyAdminPrivateRoute/>}>
-      <Route path='/create-post' element={<CreatePost/>}/>
-      <Route path='/update-post/:postId' element={<UpdatePost/>}/>
+          <Route path='/create-post' element={<CreatePost/>}/>
+          <Route path='/update-post/:postId' element={<UpdatePost/>}/>
       </Route>
       <Route path='/project' element={<Project/>}/>
-     
     </Routes>
     <Footer/>
     </BrowserRouter>
