@@ -116,7 +116,7 @@ export default function DashPost() {
 
                   </Table.Cell>
                   <Table.Cell>
-                    <Link className='text-teal-500' to={`update-post/${post._id}`}>
+                    <Link className='text-teal-500' to={`/update-post/${post._id}`}>
                     <span>
                         Edit
                       </span>
