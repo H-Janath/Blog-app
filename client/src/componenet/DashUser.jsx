@@ -11,6 +11,22 @@ export default function DashUser() {
   const [showModel,setShowModel] = useState(false);
   const [userIdToDelete,setUserIdToDelete] = useState('');
 
+  const handleDeleteUser  = async ()=>{
+    try{
+      const res = await fetch(`/api/user/delete/${userIdToDelete}`,{
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if(res.ok){
+        setUsers((prev)=> prev.filter((user)=>user._id != userIdToDelete ));
+        setShowModel(false);
+      }else{
+        console.log(data.message);
+      }
+    }catch(error){
+      console.log(error.massage);
+    }
+  }
   const handleShowMore = async ()=>{
     const startindex = users.length;
     try{
@@ -119,7 +135,7 @@ export default function DashUser() {
             <HiOutlineExclamationCircle className='h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto' />
             <h3 className='mb-5 text-lg text-gray-500 dark:text-gray-400'>Are you wnat to delete this post?</h3>
             <div className="flex justify-center gap-4">
-              <Button color='failure' >Yes, I'm sure</Button>
+              <Button color='failure' onClick={handleDeleteUser} >Yes, I'm sure</Button>
               <Button color='gray' onClick={() => setShowModel(false)}>No, cancel</Button>
             </div>
           </div>

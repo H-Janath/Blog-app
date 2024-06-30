@@ -9,5 +9,4 @@ route.post("/create",verifyToken,create);
 route.get('/getPost',getPost);
 route.delete('/deletepost/:postId/:userId',verifyToken,deletePost);
 route.put('/updatepost/:postId/:userId',verifyToken,updatePost);
-
 export default route;
