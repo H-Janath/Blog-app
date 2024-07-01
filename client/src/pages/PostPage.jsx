@@ -1,7 +1,10 @@
 import React, { lazy, useEffect, useState } from 'react'
 import {Link, useParams} from 'react-router-dom';
 import { Button, Spinner } from 'flowbite-react';
+<<<<<<< HEAD
 import CallToAction from '../componenet/CallToAction';
+=======
+>>>>>>> bf524b99618c7cca7f34cdcfda1242deb96faac7
 export default function PostPage() {
 
   const {postSlug} = useParams();
@@ -57,9 +60,12 @@ export default function PostPage() {
       <div className='p-3 max-w-2xl w-full post-content' dangerouslySetInnerHTML={{__html: post && post.content}}>
 
       </div>
+<<<<<<< HEAD
       <div className="max-w-4xl mx-auto w-full">
         <CallToAction/>
       </div>
+=======
+>>>>>>> bf524b99618c7cca7f34cdcfda1242deb96faac7
     </main>
   )
 }
