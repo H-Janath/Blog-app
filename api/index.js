@@ -5,6 +5,7 @@ import userRoute from './route/user.route.js'
 import AuthRouter from './route/auth.route.js'
 import cookieParser from 'cookie-parser';
 import postRoute from './route/post.route.js'
+import commentRoute from './route/comment.route.js'
 dotenv.config();
 mongoose.connect(process.env.MONGO).then(
     ()=>{
@@ -25,7 +26,8 @@ app.listen(3000,()=>{
 
 app.use('/api/user',userRoute);
 app.use('/api/auth',AuthRouter);
-app.use('/api/post',postRoute)
+app.use('/api/post',postRoute);
+app.use('/api/comment',commentRoute);
 
 
 app.use((err,req,res,next)=>{
