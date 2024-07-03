@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import {TextInput,FileInput, Button, Alert} from 'flowbite-react';
-import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import JoditEditor from 'jodit-react';
 import {getDownloadURL, getStorage,ref, uploadBytesResumable} from 'firebase/storage';
 import {app} from '../firebase';
-import {CircularProgressbar} from 'react-circular-progressbar'
-import 'react-circular-progressbar/dist'
-import {useNavigate} from 'react-router-dom'
+import {CircularProgressbar} from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist';
+import {useNavigate} from 'react-router-dom';
+
 export default function CreatePost() {
 
   const navigat = useNavigate();

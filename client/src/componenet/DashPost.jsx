@@ -14,7 +14,6 @@ export default function DashPost() {
     try{
         const res = await fetch(`/api/post/deletepost/${postIdToDelete}/${currentUser._id}`,{
             method: 'DELETE',
-            
         })
         const data = await res.json();
         if(!res.ok){
